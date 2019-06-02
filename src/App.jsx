@@ -69,13 +69,46 @@ const issues = [
 ];
 
 class IssueList extends React.Component {
+  constructor() {
+    super();
+    this.state = { issues: [] };
+
+    this.createTestIssue = this.createTestIssue.bind(this);
+    setTimeout(this.createTestIssue, 2000);
+  }
+
+  componentDidMount() {
+    this.loadData();
+  }
+
+  loadData() {
+    setTimeout(() => {
+      this.setState({ issues: issues });
+    }, 500);
+  }
+
+  createIssue(newIssue) {
+    const newIssues = this.state.issues.slice();
+    newIssue.id = this.state.issues.length + 1;
+    newIssues.push(newIssue);
+    this.setState({ issues: newIssues });
+  }
+
+  createTestIssue() {
+    this.createIssue({
+      status: 'New', owner: 'Pieta', created: new Date(),
+      title: 'Completion date should be optional',
+    });
+  }
+
   render() {
     return (
       <div>
         <h1>Issue Tracker</h1>
         <IssueFilter />
         <hr />
-        <IssueTable issues={issues} />
+        <IssueTable issues={this.state.issues} />
+        <button onClick={this.createTestIssue}>Add</button>
         <hr />
         <IssueAdd />
       </div>
